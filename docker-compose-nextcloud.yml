@@ -1,0 +1,22 @@
+---
+
+services:
+
+  nextcloud:
+    container_name: 'nextcloud'
+    image: 'lscr.io/linuxserver/nextcloud'
+    restart: 'unless-stopped'
+    networks:
+      net:
+        aliases: []
+    expose:
+      - 443
+    volumes:
+      - './nextcloud/config:/config'
+      - './nextcloud/data:/data'
+    environment:
+      PUID: '1112'
+      PGID: '501'
+      TZ: 'Europe/Berlin'
+
+...

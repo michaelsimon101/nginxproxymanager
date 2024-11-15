@@ -1,0 +1,46 @@
+---
+
+
+include:
+  - docker-compose-authelia.yml
+  - docker-compose-nextcloud.yml
+
+
+
+networks:
+  net:
+    driver: 'bridge'
+
+services:
+  app:
+    image: 'jc21/nginx-proxy-manager:latest'
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '81:81'
+      - '443:443'
+    volumes:
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
+      - ./snippets:/snippets'
+    networks:
+      net:
+        aliases: []
+    environment:
+      PUID: '1112'
+      PGID: '501'
+      TZ: 'Europe/Berlin'
+
+
+  whoami:
+    container_name: 'whoami'
+    image: 'docker.io/traefik/whoami'
+    restart: 'unless-stopped'
+    networks:
+      net:
+        aliases: []
+    expose:
+      - 80
+    environment:
+      TZ: 'Europe/Berlin'
+...
