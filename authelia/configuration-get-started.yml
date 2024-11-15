@@ -1,22 +1,8 @@
-
-# All values from https://www.authelia.com/integration/prologue/get-started/
-
-log:
-  level: 'debug'
-  format: 'text'
-  file_path: '/config/authelia.log'
-  keep_stdout: true
-
-
 identity_validation:
   reset_password:
     jwt_lifespan: '5 minutes'
     jwt_algorithm: 'HS256'
     jwt_secret: 'nSqgXLvl94gQBQn8Wd6E4fAKcRaO08I0ai1yhBwReJ1N9oN13LhKRvQhgQb61Dgc'
-
-
-
-
 authentication_backend:
   refresh_interval: '5m'
   password_reset:
@@ -93,57 +79,39 @@ notifier:
 access_control:
   default_policy: 'deny'
   networks:
-    - name: 'internal'
-      networks:
-        - '10.10.0.0/16'
-        - '192.168.2.0/24'
-    - name: 'VPN'
-      networks: '10.9.0.0/16'
+  - name: 'internal'
+    networks:
+    - '10.0.0.0/8'
+    - '172.16.0.0/12'
+    - '192.168.0.0/18'
   rules:
-    - domain: 'public.cosy-juelich.duckdns.org'
-      policy: 'bypass'
-
-    - domain: '*.cosy-juelich.duckdns.org'
-      policy: 'bypass'
-      methods:
-        - 'OPTIONS'
-
-    - domain: 'secure.cosy-juelich.duckdns.org'
-      policy: 'one_factor'
-      networks:
-        - 'internal'
-        - 'VPN'
-        - '192.168.1.0/24'
-        - '10.0.0.1'
-
-    - domain:
-      - 'secure.cosy-juelich.duckdns.org'
-      - 'private.cosy-juelich.duckdns.org'
-      policy: 'two_factor'
-
-    - domain: 'singlefactor.cosy-juelich.duckdns.org'
-      policy: 'one_factor'
-
-    - domain: 'mx2.mail.cosy-juelich.duckdns.org'
-      subject: 'group:admins'
-      policy: 'deny'
-
-    - domain: '*.cosy-juelich.duckdns.org'
-      subject:
-        - 'group:admins'
-        - 'group:moderators'
-      policy: 'two_factor'
-
-    - domain: 'dev.cosy-juelich.duckdns.org'
-      resources:
-      - '^/groups/dev/.*$'
-      subject: 'group:dev'
-      policy: 'two_factor'
-
-    - domain: 'dev.cosy-juelich.duckdns.org'
-      resources:
-      - '^/users/john/.*$'
-      subject:
-      - ['group:dev', 'user:john']
-      - 'group:admins'
-      policy: 'two_factor'
+  - domain: 'private.cosy-juelich.duckdns.org'
+    domain_regex: '^(\d+\-)?priv-img\.cosy-juelich\.duckdns.org$'
+    policy: 'one_factor'
+    networks:
+    - 'internal'
+    - '1.1.1.1'
+    subject:
+    - ['user:mike']
+    - ['user:tine']
+    - ['group:admins']
+    methods:
+    - 'GET'
+    - 'HEAD'
+    resources:
+    - '^/api.*'
+    query:
+    - - operator: 'present'
+        key: 'secure'
+      - operator: 'absent'
+        key: 'insecure'
+    - - operator: 'pattern'
+        key: 'token'
+        value: '^(abc123|zyx789)$'
+      - operator: 'not pattern'
+        key: 'random'
+        value: '^(1|2)$'
+  - domain: 'app.cosy-juelich.duckdns.org'
+    policy: 'bypass'
+    resources:
+    - '^/api([/?].*)?$'

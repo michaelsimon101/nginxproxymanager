@@ -1,0 +1,30 @@
+Date: 2024-11-15 10:07:41.013995034 +0100 CET m=+1190.955812673
+Recipient: {Michael Simon mi.simon@fz-juelich.de}
+Subject: Second Factor Method Added
+Second Factor Method Added
+
+Hi Michael Simon,
+
+This notification has been sent to you in order to notify you that a Second Factor Method was added to your account.
+
+--------------------------------------------------------------------------------
+
+Event Details:
+
+Action: Second Factor Method Added
+
+
+
+Category: One-Time Password
+
+
+
+--------------------------------------------------------------------------------
+
+This notification was intended for Michael Simon. This event notification
+was generated due to an action from 134.94.181.178. If you do not believe that
+your actions could have triggered this event or if you are concerned about your
+account's safety, please change your password and reach out to an administrator.
+
+Powered by Authelia https://www.authelia.com
+
